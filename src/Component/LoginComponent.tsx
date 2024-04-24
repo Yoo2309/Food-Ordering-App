@@ -41,74 +41,7 @@ const LoginComponent = ({ loginMode }: { loginMode: boolean }) => {
         </div>
       </div>
       {/* content */}
-      <div className="w-[540px] h-[590px] ml-[165px] mt-[48px] flex flex-col gap-8">
-        {/* title */}
-        <div className="w-[355px] h-[68px] flex flex-col gap-3">
-          <div className="w-[355px] h-[68px] font-inter font-bold text-[24px] leading-[36px] text-gray-900">
-            Create Account to Get Started
-          </div>
-          <div className="w-[158px] h-5 font-inter font-medium text-[14px] leading-5 text-gray-500">
-            Sign up and get started
-          </div>
-        </div>
-        {/* text filed */}
-        <LoginForm loginMode={loginMode} />
-        {/*  */}
-        <div className="w-[339px] h-5 flex gap-3 items-center">
-          <input type="checkbox" className="w-5 h-5" />
-          <div className="w-[307px] h-5 font-inter font-medium text-[16px] leading-[22.4px] tracking-[0.3px] text-gray-500">
-            I agree to the Terms & Conditions
-          </div>
-        </div>
-        {/* buttn */}
-        <div className="w-[540px] h-[58px] rounded-[12px] bg-primary-500 flex items-center justify-center">
-          <div className="w-[62px] h-[22px] font-inter font-medium leading-[22.4px] tracking-[0.3px] text-white">
-            Sign Up
-          </div>
-        </div>
-        {/* or */}
-        <div className="w-[538px] h-5 flex justify-evenly items-center">
-          <hr className="w-[203px] border-[1px] border-gray-50"></hr>
-          <div className="w-[102px] h-5 font-inter font-medium text-[14px] text-gray-500">
-            Or sign up with
-          </div>
-          <hr className="w-[203px] border-[1px] border-gray-50"></hr>
-        </div>
-        {/*  */}
-        <div className="w-[540px] h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center justify-center">
-          <div className="w-[197px] h-6 flex items-center">
-            <div className="w-6 h-6">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M21.8055 10.0415H21V10H12V14H17.6515C16.827 16.3285 14.6115 18 12 18C8.6865 18 6 15.3135 6 12C6 8.6865 8.6865 6 12 6C13.5295 6 14.921 6.577 15.9805 7.5195L18.809 4.691C17.023 3.0265 14.634 2 12 2C6.4775 2 2 6.4775 2 12C2 17.5225 6.4775 22 12 22C17.5225 22 22 17.5225 22 12C22 11.3295 21.931 10.675 21.8055 10.0415Z"
-                  fill="#FFC107"
-                />
-                <path
-                  d="M3.15295 7.3455L6.43845 9.755C7.32745 7.554 9.48045 6 12 6C13.5295 6 14.921 6.577 15.9805 7.5195L18.809 4.691C17.023 3.0265 14.634 2 12 2C8.15895 2 4.82795 4.1685 3.15295 7.3455Z"
-                  fill="#FF3D00"
-                />
-                <path
-                  d="M12 22C14.583 22 16.93 21.0115 18.7045 19.404L15.6095 16.785C14.5718 17.5742 13.3038 18.001 12 18C9.39903 18 7.19053 16.3415 6.35853 14.027L3.09753 16.5395C4.75253 19.778 8.11353 22 12 22Z"
-                  fill="#4CAF50"
-                />
-                <path
-                  d="M21.8055 10.0415H21V10H12V14H17.6515C17.2571 15.1082 16.5467 16.0766 15.608 16.7855L15.6095 16.7845L18.7045 19.4035C18.4855 19.6025 22 17 22 12C22 11.3295 21.931 10.675 21.8055 10.0415Z"
-                  fill="#1976D2"
-                />
-              </svg>
-            </div>
-            <div className="w-[161px] h-[22px] ml-3 font-inter font-medium text-[16px] leading-[22.4px] tracking-[0.3px] text-gray-900">
-              Sign Up with Google
-            </div>
-          </div>
-        </div>
-      </div>
+      <LoginForm loginMode={loginMode} />
       {/*  */}
       <div className="w-[255px] h-6 mt-[133px] ml-[307px] font-inter font-medium text-[16px] leading-[22.4px] tracking-[0.3px]">
         <span className="font-inter font-medium text-[16px] leading-6 text-center text-gray-500">
