@@ -1,8 +1,19 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 function LoginForm({ loginMode }: { loginMode: boolean }) {
   const [isShowPwd, setShowPwd] = useState(false);
   const [inputPwd, setInputPwd] = useState(false);
+  const {
+    register: loginInfo,
+    formState: { errors: error_login },
+    // getValues,
+  } = useForm();
+  const {
+    register: signupInfo,
+    formState: { errors: error_signup },
+    // getValues,
+  } = useForm();
   return (
     <div>
       {!loginMode ? (
@@ -293,7 +304,7 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
             </div>
           </div>
           {/* text filed */}
-          <form className="w-full h-[132px] flex flex-col gap-4">
+          <div className="w-full h-[132px] flex flex-col gap-4">
             {/* username */}
             <div className="w-full h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center">
               <div className="w-6 h-6 ml-4">
@@ -409,7 +420,7 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
                 )}
               </div>
             </div>
-          </form>
+          </div>
           {/*  */}
           <div className="w-full h-6 flex items-center justify-between">
             <div className="flex items-center">
@@ -424,9 +435,9 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
           </div>
           {/* buttn */}
           <div className="cursor-pointer w-[540px] h-[58px] rounded-[12px] bg-primary-500 flex items-center justify-center">
-            <div className="w-[62px] h-[22px] font-inter font-medium leading-[22.4px] tracking-[0.3px] text-white">
+            <button className="w-[62px] h-[22px] font-inter font-medium leading-[22.4px] tracking-[0.3px] text-white">
               Log In
-            </div>
+            </button>
           </div>
           {/* or */}
           <div className="w-[538px] h-5 flex justify-evenly items-center">
