@@ -7,10 +7,13 @@ import {
   fetchUserData,
   refreshToken,
 } from "../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.rootReducer.user);
   const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     let access_token = Cookies.get("accessToken");
     let refresh_token = Cookies.get("refreshToken");
@@ -26,6 +29,8 @@ const Home = () => {
         console.log("refresh");
         dispatch(refreshToken(refresh_token.replace(/"/g, "")));
       }
+    } else {
+      navigate("/login");
     }
   }, []);
   useEffect(() => {
