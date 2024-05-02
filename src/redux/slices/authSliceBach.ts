@@ -9,30 +9,6 @@ import {
 import { jwtDecode } from "jwt-decode";
 import { initialUser } from "./authSliceLoi";
 
-export const refresh_token_Bach = createAsyncThunk(
-  "auth/refreshTokenBach",
-  async (token: Token) => {
-    try {
-      const response = await fetch(
-        `https://zens-restaurant.azurewebsites.net/api/v1/auth/regenerate-token`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            accessToken: token.accessToken,
-            refreshToken: token.refreshToken,
-          }),
-        }
-      );
-      const data = await response.json();
-      return data;
-    } catch {}
-  }
-);
-
 //helper func
 const decode_token_Bach = (state: CurrentUser, token: Token) => {
   localStorage.setItem("Bach_accessToken", JSON.stringify(token.accessToken));
@@ -96,16 +72,15 @@ const authSliceBach = createSlice({
         },
       };
     },
-  },
-  extraReducers(builder) {
-    builder.addCase(
-      refresh_token_Bach.fulfilled,
-      (state, action: PayloadAction<Token>) => {
-        return decode_token_Bach(state, action.payload);
-      }
-    );
+    logout_Bach: () => {
+      return initialUser;
+    },
   },
 });
-export const { handle_login_Bach, refresh_login_Bach, fetch_UserData_Bach } =
-  authSliceBach.actions;
+export const {
+  handle_login_Bach,
+  refresh_login_Bach,
+  fetch_UserData_Bach,
+  logout_Bach,
+} = authSliceBach.actions;
 export default authSliceBach.reducer;
