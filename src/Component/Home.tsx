@@ -3,10 +3,10 @@ import { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
   refresh_login_Loi,
-  refresh_token_Loi,
   fetch_UserData_Loi,
   initialUser,
   logout_Loi,
+  handle_login_Loi,
 } from "../redux/slices/authSliceLoi";
 import {
   refresh_login_Bach,
@@ -23,6 +23,14 @@ import {
   refresh_login_Ha,
   refresh_token_Ha,
 } from "../redux/slices/authSliceHa";
+import {
+  fetchLogoutLoi,
+  fetchUserDataBach,
+  fetchUserDataHa,
+  fetchUserDataLoi,
+  refresh_token_Bach,
+  refresh_token_Loi,
+} from "../API/API";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -41,46 +49,20 @@ const Home = () => {
   });
   const dispatch = useDispatch<AppDispatch>();
 
-  //Loi's API
-  const fetchUserDataLoi = async (token: string) => {
-    try {
-      const response = await fetch(
-        `https://back-end-zens-training.vercel.app/api/profile`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response;
-    } catch (error) {
-      toast.error("Đăng nhập xảy ra lỗi!");
-    }
+  const HandleLogout = async () => {
+    localStorage.removeItem(`${id}_accessToken`);
+    localStorage.removeItem(`${id}_refreshToken`);
+    dispatch(logout_Bach());
+    navigate("/");
   };
+
+  //Loi's API
   const HandleLogoutLoi = async (access_token: string) => {
-    try {
-      const response = await fetch(
-        `https://back-end-zens-training.vercel.app/api/logout`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      );
-      if (response.ok) {
-        navigate(`/`);
-        localStorage.removeItem(`${id}_accessToken`);
-        localStorage.removeItem(`${id}_refreshToken`);
-        dispatch(logout_Loi());
-      } else {
-        toast.error("Đăng xuất thất bại");
-      }
-    } catch (error) {
-      toast.error("Đăng xuất xảy ra lỗi!");
+    const response = await fetchLogoutLoi(access_token);
+    if (response) {
+      HandleLogout();
+    } else {
+      toast.error("Đăng xuất thất bại");
     }
   };
   const HandleRefreshLoginLoi = async (token: Token) => {
@@ -90,53 +72,20 @@ const Home = () => {
       dispatch(fetch_UserData_Loi(data));
     } else {
       if (resp?.status === 401) {
-        dispatch(refresh_token_Loi(token.refreshToken.replace(/"/g, "")));
+        const resp = await refresh_token_Loi(
+          token.refreshToken.replace(/"/g, "")
+        );
+        if (resp) {
+          if (resp.status === 200) {
+            const data = await resp.json();
+            dispatch(handle_login_Loi(data));
+          }
+        }
       }
     }
   };
 
   //Bach's API
-  const fetchUserDataBach = async (token: string, id: string) => {
-    try {
-      const response = await fetch(
-        `https://zens-restaurant.azurewebsites.net/api/v1/user/profile/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      return data;
-    } catch {}
-  };
-  const refresh_token_Bach = async (token: Token) => {
-    try {
-      const response = await fetch(
-        `https://zens-restaurant.azurewebsites.net/api/v1/auth/regenerate-token`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            accessToken: token.accessToken,
-            refreshToken: token.refreshToken,
-          }),
-        }
-      );
-      return response;
-    } catch {}
-  };
-  const HandleLogoutBach = async () => {
-    localStorage.removeItem(`${id}_accessToken`);
-    localStorage.removeItem(`${id}_refreshToken`);
-    dispatch(logout_Bach());
-    navigate("/");
-  };
   const HandlRefreshLoginBach = async (token: Token, id: string) => {
     const resp = await fetchUserDataBach(
       token.accessToken.replace(/"/g, ""),
@@ -154,26 +103,14 @@ const Home = () => {
           const data = await resp.json();
           dispatch(handle_login_Bach(data));
         } else if (resp.status === 400) {
-          HandleLogoutBach();
+          toast.info("Phiên đăng nhập hết hạn");
+          HandleLogout();
         }
       }
     }
   };
 
   //Ha's API
-  const fetchUserDataHa = async (token: string) => {
-    const response = await fetch(
-      "https://ha-food-api.zenslab.com/api/profile",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response;
-  };
   const HandleRefreshLoginHa = async (token: Token) => {
     const resp = await fetchUserDataHa(token.accessToken.replace(/"/g, ""));
     if (resp.ok) {
@@ -264,13 +201,10 @@ const Home = () => {
                 HandleLogoutLoi(user.token.accessToken);
                 break;
               case APIName.Bach:
-                HandleLogoutBach()
+                HandleLogout();
                 break;
               case APIName.Ha:
-                localStorage.removeItem(`${id}_accessToken`);
-                localStorage.removeItem(`${id}_refreshToken`);
-                dispatch(logout_Ha());
-                navigate("/");
+                HandleLogout();
                 break;
             }
           }}

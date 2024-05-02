@@ -25,26 +25,6 @@ export const initialUser: CurrentUser = {
   },
 };
 
-export const refresh_token_Loi = createAsyncThunk(
-  "auth/refreshToken",
-  async (refresh_token: string) => {
-    try {
-      const response = await fetch(
-        `https://back-end-zens-training.vercel.app/api/refresh-token`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${refresh_token}`,
-          },
-        }
-      );
-      const data = response.json();
-      return data;
-    } catch {}
-  }
-);
-
 //helper func
 const decode_token_Loi = (state: CurrentUser, token: Token) => {
   const decode_token: LoginTokenLoi = jwtDecode(token.accessToken);
@@ -112,15 +92,7 @@ const authSliceLoi = createSlice({
     logout_Loi: () => {
       return initialUser;
     },
-  },
-  extraReducers(builder) {
-    builder.addCase(
-      refresh_token_Loi.fulfilled,
-      (state, action: PayloadAction<Token>) => {
-        return decode_token_Loi(state, action.payload);
-      }
-    );
-  },
+  }
 });
 export const { handle_login_Loi, refresh_login_Loi, fetch_UserData_Loi, logout_Loi } =
   authSliceLoi.actions;
