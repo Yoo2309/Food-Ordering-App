@@ -1,18 +1,21 @@
-import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
-import { LoginInfo, SignUpInfo } from "../../types/types";
-import { handle_login } from "../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { useNavigate, useParams } from "react-router-dom";
+import md5 from "md5";
+import { LoginInfo, SignUpInfo, APIName } from "../types/types";
+import { handle_login_Loi } from "../redux/slices/authSliceLoi";
+import { handle_login_Bach } from "../redux/slices/authSliceBach";
 import {
   setShowPassword,
   setInputPassword,
 } from "../redux/slices/LoginStateSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
-import { useNavigate } from "react-router-dom";
+import { handle_login_Ha } from "../redux/slices/authSliceHa";
 
 function LoginForm({ loginMode }: { loginMode: boolean }) {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const dispatch = useDispatch<AppDispatch>();
   const loginState = useSelector(
@@ -20,19 +23,18 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
   );
 
   const {
-    handleSubmit: handleSubmitLogin,
+    handleSubmit: SubmitLogin,
     register: login_data,
     formState: { errors: error_login },
   } = useForm<LoginInfo>();
   const {
-    handleSubmit: handleSubmitSignup,
+    handleSubmit: SubmitSignup,
     register: signup_data,
     formState: { errors: error_signup },
   } = useForm<SignUpInfo>();
 
-  const submitLogin: SubmitHandler<LoginInfo> = async (
-    login_data: LoginInfo
-  ) => {
+  //Loi's API
+  const submitLoginLoi = async (login_data: LoginInfo) => {
     try {
       const response = await fetch(
         `https://back-end-zens-training.vercel.app/api/login`,
@@ -50,9 +52,8 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
       if (response.ok) {
         // return response;
         const data = await response.json();
-        console.log(data)
-        dispatch(handle_login(data));
-        navigate("/");
+        dispatch(handle_login_Loi(data));
+        navigate(`/${id}`);
       } else {
         toast.error("Đăng nhập thất bại");
       }
@@ -60,11 +61,7 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
       toast.error("Đăng nhập xảy ra lỗi");
     }
   };
-  const submitSignup: SubmitHandler<SignUpInfo> = async (
-    signup_data: SignUpInfo,
-    e
-  ) => {
-    e?.preventDefault();
+  const submitSignupLoi = async (signup_data: SignUpInfo) => {
     try {
       const response = await fetch(
         `https://back-end-zens-training.vercel.app/api/register`,
@@ -91,13 +88,159 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
       toast.error("Đăng ký xảy ra lỗi");
     }
   };
+
+  //Bach's API
+  const submitLoginBach = async (login_data: LoginInfo) => {
+    try {
+      const response = await fetch(
+        `https://zens-restaurant.azurewebsites.net/api/v1/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: login_data.username,
+            password: md5(login_data.password),
+          }),
+        }
+      );
+      if (response.ok) {
+        // return response;
+        const data = await response.json();
+        dispatch(handle_login_Bach(data));
+        navigate(`/${id}`);
+      } else {
+        toast.error("Đăng nhập thất bại");
+      }
+    } catch (error) {
+      toast.error("Đăng nhập xảy ra lỗi");
+    }
+  };
+  const submitSignupBach = async (signup_data: SignUpInfo) => {
+    try {
+      const response = await fetch(
+        `https://zens-restaurant.azurewebsites.net/api/v1/users/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: signup_data.username,
+            email: signup_data.email,
+            password: signup_data.password,
+          }),
+        }
+      );
+      if (response.ok) {
+        // return response;
+        toast.success("Đăng ký thành công!");
+        navigate("/login");
+      } else {
+        toast.error("Đăng ký thất bại");
+      }
+    } catch (error) {
+      toast.error("Đăng ký xảy ra lỗi");
+    }
+  };
+
+  //Ha's API
+  const submitLoginHa = async (login_data: LoginInfo) => {
+    try {
+      const response = await fetch(
+        `https://ha-food-api.zenslab.com/api/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: login_data.username,
+            password: login_data.password,
+          }),
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        dispatch(handle_login_Ha(data));
+        navigate(`/${id}`);
+      } else {
+        toast.error("Đăng nhập thất bại");
+      }
+    } catch (error) {
+      toast.error("Đăng nhập xảy ra lỗi");
+    }
+  };
+  const submitSignupHa = async (signup_data: SignUpInfo) => {
+    try {
+      const response = await fetch(
+        `https://ha-food-api.zenslab.com/api/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: signup_data.username,
+            email: signup_data.email,
+            password: signup_data.password,
+            password_confirmation: signup_data.password,
+          }),
+        }
+      );
+      if (response.ok) {
+        // return response;
+        toast.success("Đăng ký thành công!");
+        navigate("/login");
+      } else {
+        toast.error("Đăng ký thất bại");
+      }
+    } catch (error) {
+      toast.error("Đăng ký xảy ra lỗi");
+    }
+  };
+
+  const handleSubmitLogin: SubmitHandler<LoginInfo> = (
+    login_data: LoginInfo
+  ) => {
+    switch (id) {
+      case APIName.Loi:
+        submitLoginLoi(login_data);
+        break;
+      case APIName.Bach:
+        submitLoginBach(login_data);
+        break;
+      case APIName.Ha:
+        submitLoginHa(login_data);
+        break;
+    }
+  };
+  const handleSubmitSignup: SubmitHandler<SignUpInfo> = (
+    signup_data: SignUpInfo,
+    e
+  ) => {
+    switch (id) {
+      case APIName.Loi:
+        e?.preventDefault();
+        submitSignupLoi(signup_data);
+        break;
+      case APIName.Bach:
+        submitSignupBach(signup_data);
+        break;
+      case APIName.Ha:
+        submitSignupHa(signup_data);
+        break;
+    }
+  };
+
   return (
     <div>
       {!loginMode ? (
         // signup mode
         <form
           className="w-[540px] h-[590px] ml-[165px] mt-[48px] flex flex-col gap-8"
-          onSubmit={handleSubmitSignup(submitSignup)}
+          onSubmit={SubmitSignup(handleSubmitSignup)}
         >
           {/* title */}
           <div className="w-[355px] h-[68px] flex flex-col gap-3">
@@ -409,7 +552,7 @@ function LoginForm({ loginMode }: { loginMode: boolean }) {
         //login mode
         <form
           className="w-[540px] h-[590px] ml-[165px] mt-[48px] flex flex-col gap-8"
-          onSubmit={handleSubmitLogin(submitLogin)}
+          onSubmit={SubmitLogin(handleSubmitLogin)}
         >
           {/* title */}
           <div className="w-[355px] h-[68px] flex flex-col gap-3">

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import Flag from "./SVG/Flag";
 import IlluBg from "./SVG/IlluBg";
@@ -6,6 +6,7 @@ import IlluComponent from "./SVG/IlluComponent";
 
 const LoginComponent = ({ loginMode }: { loginMode: boolean }) => {
   const navigate = useNavigate();
+  const {id} = useParams()
   return (
     <div className="w-[1440px] h-[1024px] absolute top-0">
       {/* language */}
@@ -54,9 +55,9 @@ const LoginComponent = ({ loginMode }: { loginMode: boolean }) => {
           className="cursor-pointer font-inter font-bold text-[16px] leading-6 text-center text-primary-500"
           onClick={() => {
             if (loginMode) {
-              navigate("/signup");
+              navigate(`/signup/${id}`);
             } else {
-              navigate("/login");
+              navigate(`/login/${id}`);
             }
           }}
         >
