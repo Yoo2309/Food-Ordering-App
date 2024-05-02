@@ -17,8 +17,9 @@ function App() {
       />
       <Routes>
         <Route path="/" Component={Index}></Route>
-        <Route path="/login" Component={Login}></Route>
-        <Route path="/signup" Component={SignUp}></Route>
+        <Route path="/:id" Component={Index}></Route>
+        <Route path="/login/:id" Component={Login}></Route>
+        <Route path="/signup/:id" Component={SignUp}></Route>
       </Routes>
     </BrowserRouter>
   );
