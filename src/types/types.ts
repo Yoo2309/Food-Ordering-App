@@ -83,6 +83,16 @@ export type LoginResponseHa = {
   expires_in: number;
 };
 export type ProfileResponseHa = {
+  id: number;
+  fullname: string;
   username: string;
   email: string;
+  address: string;
+  gender: string;
+  DOB: string;
+  role: string;
+  email_verified_at: string;
+  deleted_at: string;
+  created_at: string;
+  updated_at: string;
 };

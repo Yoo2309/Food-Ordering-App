@@ -10,13 +10,19 @@ import {
 } from "../redux/slices/authSliceLoi";
 import {
   refresh_login_Bach,
-  refresh_token_Bach,
   fetch_UserData_Bach,
+  logout_Bach,
+  handle_login_Bach,
 } from "../redux/slices/authSliceBach";
 import { useNavigate, useParams } from "react-router-dom";
 import { APIName, CurrentUser, Token } from "../types/types";
 import { toast } from "react-toastify";
-import { refresh_login_Ha } from "../redux/slices/authSliceHa";
+import {
+  fetch_UserData_Ha,
+  logout_Ha,
+  refresh_login_Ha,
+  refresh_token_Ha,
+} from "../redux/slices/authSliceHa";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -106,21 +112,51 @@ const Home = () => {
       return data;
     } catch {}
   };
+  const refresh_token_Bach = async (token: Token) => {
+    try {
+      const response = await fetch(
+        `https://zens-restaurant.azurewebsites.net/api/v1/auth/regenerate-token`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            accessToken: token.accessToken,
+            refreshToken: token.refreshToken,
+          }),
+        }
+      );
+      return response;
+    } catch {}
+  };
+  const HandleLogoutBach = async () => {
+    localStorage.removeItem(`${id}_accessToken`);
+    localStorage.removeItem(`${id}_refreshToken`);
+    dispatch(logout_Bach());
+    navigate("/");
+  };
   const HandlRefreshLoginBach = async (token: Token, id: string) => {
     const resp = await fetchUserDataBach(
       token.accessToken.replace(/"/g, ""),
       id
     );
     if (resp.status === "Active") {
-      console.log("fetch user");
       dispatch(fetch_UserData_Bach(resp));
     } else if (resp?.status === 401) {
-      dispatch(
-        refresh_token_Bach({
-          accessToken: token.accessToken.replace(/"/g, ""),
-          refreshToken: token.refreshToken.replace(/"/g, ""),
-        })
-      );
+      const resp = await refresh_token_Bach({
+        accessToken: token.accessToken.replace(/"/g, ""),
+        refreshToken: token.refreshToken.replace(/"/g, ""),
+      });
+      if (resp) {
+        if (resp.status === 200) {
+          const data = await resp.json();
+          dispatch(handle_login_Bach(data));
+        } else if (resp.status === 400) {
+          HandleLogoutBach();
+        }
+      }
     }
   };
 
@@ -138,9 +174,14 @@ const Home = () => {
     );
     return response;
   };
-  const HandleRefreshLoginHa = async (token: string) => {
-    const resp = await fetchUserDataHa(token.replace(/"/g, ""));
-    console.log(resp);
+  const HandleRefreshLoginHa = async (token: Token) => {
+    const resp = await fetchUserDataHa(token.accessToken.replace(/"/g, ""));
+    if (resp.ok) {
+      const data = await resp.json();
+      dispatch(fetch_UserData_Ha(data.data));
+    } else if (resp.status === 500) {
+      dispatch(refresh_token_Ha(token.refreshToken.replace(/"/g, "")));
+    }
   };
 
   useEffect(() => {
@@ -206,7 +247,7 @@ const Home = () => {
         break;
       case APIName.Ha:
         if (user.token.accessToken) {
-          HandleRefreshLoginHa(user.token.accessToken);
+          HandleRefreshLoginHa(user.token);
         }
         break;
     }
@@ -223,11 +264,13 @@ const Home = () => {
                 HandleLogoutLoi(user.token.accessToken);
                 break;
               case APIName.Bach:
-                localStorage.removeItem(`${id}_accessToken`);
-                localStorage.removeItem(`${id}_refreshToken`);
-                navigate("/");
+                HandleLogoutBach()
                 break;
               case APIName.Ha:
+                localStorage.removeItem(`${id}_accessToken`);
+                localStorage.removeItem(`${id}_refreshToken`);
+                dispatch(logout_Ha());
+                navigate("/");
                 break;
             }
           }}
