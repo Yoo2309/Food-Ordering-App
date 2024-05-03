@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   CurrentUser,
   LoginResponseHa,
-  ProfileResponseHa,
+  ProfileResponseHaNhuY,
   Token,
 } from "../../types/types";
 import { initialUser } from "./authSliceLoi";
@@ -12,7 +12,7 @@ export const refresh_token_Ha = createAsyncThunk<LoginResponseHa, string>(
   async (token: string) => {
     try {
       const response = await fetch(
-        `https://ha-food-api.zenslab.com/api/refreshAccessToken`,
+        `https://ha-food-api.zenslab.com/api/refresh-token`,
         {
           method: "POST",
           headers: {
@@ -65,7 +65,7 @@ const authSliceHa = createSlice({
         },
       };
     },
-    fetch_UserData_Ha: (state, action: PayloadAction<ProfileResponseHa>) => {
+    fetch_UserData_Ha: (state, action: PayloadAction<ProfileResponseHaNhuY>) => {
       console.log(action.payload);
       return {
         ...state,
