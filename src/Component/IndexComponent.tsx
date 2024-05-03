@@ -29,6 +29,14 @@ const IndexComponent = () => {
       >
         HA'S API
       </div>
+      <div
+        className="min-w-[240px] px-20 py-5 bg-primary-200 rounded-[12px] font-bold text-gray-900 cursor-pointer"
+        onClick={() => {
+          navigate(`/${APIName.NhuY}`);
+        }}
+      >
+        Nhu Y'S API
+      </div>
     </div>
   );
 };

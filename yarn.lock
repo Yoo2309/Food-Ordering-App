@@ -7882,7 +7882,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.8.1:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -7959,6 +7959,13 @@ raw-body@2.5.2:
     http-errors "2.0.0"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
+
+react-amphtml@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-amphtml/-/react-amphtml-4.0.2.tgz#118338e60109341811ed4496ec7ad2ca60cd1309"
+  integrity sha512-CQoSahAv5biAwQ+RsZuQJTjflML6mRR/I4+mNlf4ANl4fI2O8DUZVgX8bvKCrmgrLbBe1gmGewqvG7sMAA5REQ==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-app-polyfill@^3.0.0:
   version "3.0.0"

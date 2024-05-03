@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import Home from "../Component/Home";
 import IndexComponent from "../Component/IndexComponent";
+import CutstomHome from "./CutstomHome";
 
 const Index = () => {
   const { id } = useParams();
   if (id) {
-    return <Home />;
+    return <CutstomHome />;
   } else {
     return <IndexComponent />;
   }

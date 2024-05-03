@@ -3,15 +3,13 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { useNavigate, useParams } from "react-router-dom";
-import md5 from "md5";
-import { LoginInfo, APIName } from "../types/types";
-import { handle_login_Loi } from "../redux/slices/authSliceLoi";
-import { handle_login_Bach } from "../redux/slices/authSliceBach";
-import { setShowPassword } from "../redux/slices/LoginStateSlice";
-import { handle_login_Ha } from "../redux/slices/authSliceHa";
-import { handle_login_NhuY } from "../redux/slices/authSliceNhuY";
+import { SignUpInfo, APIName } from "../types/types";
+import {
+  setShowPassword,
+  setInputPassword,
+} from "../redux/slices/LoginStateSlice";
 
-const LoginForm = () => {
+const SignUpForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -21,141 +19,147 @@ const LoginForm = () => {
   );
 
   const {
-    handleSubmit: SubmitLogin,
-    register: login_data,
-    formState: { errors: error_login },
-  } = useForm<LoginInfo>();
+    handleSubmit: SubmitSignup,
+    register: signup_data,
+    formState: { errors: error_signup },
+  } = useForm<SignUpInfo>();
 
   //Loi's API
-  const submitLoginLoi = async (login_data: LoginInfo) => {
+  const submitSignupLoi = async (signup_data: SignUpInfo) => {
     try {
       const response = await fetch(
-        `https://back-end-zens-training.vercel.app/api/login`,
+        `https://back-end-zens-training.vercel.app/api/register`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username: login_data.username,
-            password: login_data.password,
+            username: signup_data.username,
+            email: signup_data.email,
+            password: signup_data.password,
           }),
         }
       );
       if (response.ok) {
         // return response;
-        const data = await response.json();
-        dispatch(handle_login_Loi(data));
-        navigate(`/${id}`);
+        toast.success("Đăng ký thành công!");
+        navigate(`/auth/login/${id}`);
       } else {
-        toast.error("Đăng nhập thất bại");
+        toast.error("Đăng ký thất bại");
       }
     } catch (error) {
-      toast.error("Đăng nhập xảy ra lỗi");
+      toast.error("Đăng ký xảy ra lỗi");
     }
   };
   //Bach's API
-  const submitLoginBach = async (login_data: LoginInfo) => {
+  const submitSignupBach = async (signup_data: SignUpInfo) => {
     try {
       const response = await fetch(
-        `https://zens-restaurant.azurewebsites.net/api/v1/auth/login`,
+        `https://zens-restaurant.azurewebsites.net/api/v1/users/register`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: login_data.username,
-            password: md5(login_data.password),
+            username: signup_data.username,
+            email: signup_data.email,
+            password: signup_data.password,
           }),
         }
       );
       if (response.ok) {
         // return response;
-        const data = await response.json();
-        dispatch(handle_login_Bach(data));
-        navigate(`/${id}`);
+        toast.success("Đăng ký thành công!");
+        navigate(`/auth/login/${id}`);
       } else {
-        toast.error("Đăng nhập thất bại");
+        toast.error("Đăng ký thất bại");
       }
     } catch (error) {
-      toast.error("Đăng nhập xảy ra lỗi");
+      toast.error("Đăng ký xảy ra lỗi");
     }
   };
   //Ha's API
-  const submitLoginHa = async (login_data: LoginInfo) => {
+  const submitSignupHa = async (signup_data: SignUpInfo) => {
     try {
       const response = await fetch(
-        `https://ha-food-api.zenslab.com/api/login`,
+        `https://ha-food-api.zenslab.com/api/register`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: login_data.username,
-            password: login_data.password,
+            username: signup_data.username,
+            email: signup_data.email,
+            password: signup_data.password,
+            password_confirmation: signup_data.password,
           }),
         }
       );
       if (response.ok) {
-        const data = await response.json();
-        dispatch(handle_login_Ha(data));
-        navigate(`/${id}`);
+        // return response;
+        toast.success("Đăng ký thành công!");
+        navigate(`/auth/login/${id}`);
       } else {
-        toast.error("Đăng nhập thất bại");
+        toast.error("Đăng ký thất bại");
       }
     } catch (error) {
-      toast.error("Đăng nhập xảy ra lỗi");
+      toast.error("Đăng ký xảy ra lỗi");
     }
   };
   //NhuY's API
-  const submitLoginNhuY = async (login_data: LoginInfo) => {
+  const submitSignupNhuY = async (signup_data: SignUpInfo) => {
     try {
-      const response = await fetch(`https://y-food-api.zenslab.com/api/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: login_data.username,
-          password: login_data.password,
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        dispatch(handle_login_NhuY(data));
-        navigate(`/${id}`);
+      const response = await fetch(
+        `https://y-food-api.zenslab.com/api/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: signup_data.username,
+            email: signup_data.email,
+            password: signup_data.password,
+          }),
+        }
+      );
+      if (response.status) {
+        // return response;
+        toast.success("Đăng ký thành công!");
+        navigate(`/auth/login/${id}`);
       } else {
-        toast.error("Đăng nhập thất bại");
+        toast.error("Đăng ký thất bại");
       }
     } catch (error) {
-      toast.error("Đăng nhập xảy ra lỗi");
+      toast.error("Đăng ký xảy ra lỗi");
     }
   };
 
-  const handleSubmitLogin: SubmitHandler<LoginInfo> = (
-    login_data: LoginInfo
+  const handleSubmitSignup: SubmitHandler<SignUpInfo> = (
+    signup_data: SignUpInfo,
+    e
   ) => {
     switch (id) {
       case APIName.Loi:
-        submitLoginLoi(login_data);
+        e?.preventDefault();
+        submitSignupLoi(signup_data);
         break;
       case APIName.Bach:
-        submitLoginBach(login_data);
+        submitSignupBach(signup_data);
         break;
       case APIName.Ha:
-        submitLoginHa(login_data);
+        submitSignupHa(signup_data);
         break;
       case APIName.NhuY:
-        submitLoginNhuY(login_data);
+        submitSignupNhuY(signup_data);
         break;
     }
   };
 
   return (
-    //login mode
     <div>
       {/* logo */}
       <div className="w-[197px] h-10 ml-[165px] mt-[53px] flex justify-between items-center">
@@ -169,20 +173,20 @@ const LoginForm = () => {
       </div>
       {/* Content */}
       <form
-        className="sm:w-[540px] w-[480px] h-[590px] sm:ml-[165px] ml-[64px] mt-[48px] flex flex-col gap-8"
-        onSubmit={SubmitLogin(handleSubmitLogin)}
+        className="sm:w-[540px] w-[480px] h-[590px] sm:sm:ml-[165px] ml-[64p] ml-[64px] mt-[48px] flex flex-col gap-8"
+        onSubmit={SubmitSignup(handleSubmitSignup)}
       >
         {/* title */}
         <div className="w-[355px] h-[68px] flex flex-col gap-3">
           <div className="w-[355px] h-[68px] font-['Inter'] font-bold text-[24px] leading-[36px] text-gray-900">
-            Hi, Welcome Back!
+            Create Account to Get Started
           </div>
           <div className="w-[158px] h-5 font-['Inter'] font-medium text-[14px] leading-5 text-gray-500">
-            Log In to your account
+            Sign up and get started
           </div>
         </div>
         {/* text filed */}
-        <div className="w-full h-[132px] flex flex-col gap-4">
+        <div className="sm:w-[540px] w-[480px] h-[206px] flex flex-col gap-4">
           {/* username */}
           <div className="w-full h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center">
             <div className="w-6 h-6 ml-4">
@@ -212,13 +216,56 @@ const LoginForm = () => {
             <input
               className="w-[445px] h-[21px] mt-[2px] ml-[12px] border-transparent focus:outline-none focus:ring-0 font-['Inter'] font-medium text-[16px] leading-[22.4] tracking-[0.3px] text-gray-900"
               placeholder="Username"
-              {...login_data("username", { required: true })}
+              {...signup_data("username", { required: true })}
             ></input>
             <span className="text-red">
-              {error_login.username?.type === "required" && "*"}
+              {error_signup.username?.type === "required" && "*"}
             </span>
           </div>
-
+          {/* email */}
+          <div className="w-full h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center">
+            <div className="w-6 h-6 ml-4">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.99902 4H19.999C21.099 4 21.999 4.9 21.999 6V18C21.999 19.1 21.099 20 19.999 20H3.99902C2.89902 20 1.99902 19.1 1.99902 18V6C1.99902 4.9 2.89902 4 3.99902 4Z"
+                  stroke="#96A0B5"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M21.999 6L11.999 13L1.99902 6"
+                  stroke="#96A0B5"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <input
+              className="w-[445px] h-[21px] mt-[2px] ml-[12px] border-transparent focus:outline-none focus:ring-0 font-['Inter'] font-medium text-[16px] leading-[22.4] tracking-[0.3px] text-gray-900"
+              placeholder="Email"
+              {...signup_data("email", {
+                required: true,
+                pattern:
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+              })}
+            ></input>
+            <span className="text-red">
+              {error_signup.email?.type === "required" && "*"}
+            </span>
+          </div>
+          {error_signup.email?.type === "pattern" && (
+            <div className="text-red text-[10px]">
+              "Email đã nhập không đúng định dạng"
+            </div>
+          )}
           {/* password */}
           <div className="w-full h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center">
             <div className="w-6 h-6 ml-4">
@@ -249,10 +296,20 @@ const LoginForm = () => {
               className="w-[445px] h-[21px] mt-[2px] ml-[12px] border-transparent focus:outline-none focus:ring-0 font-['Inter'] font-medium text-[16px] leading-[22.4] tracking-[0.3px] text-gray-900"
               placeholder="Password"
               type={`${loginState.showPassword ? "text" : "password"}`}
-              {...login_data("password", { required: true })}
+              {...signup_data("password", {
+                required: true,
+                pattern:
+                  /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}/,
+              })}
+              onFocus={() => {
+                dispatch(setInputPassword());
+              }}
+              onBlur={() => {
+                dispatch(setInputPassword());
+              }}
             ></input>
             <span className="text-red">
-              {error_login.password?.type === "required" && "*"}
+              {error_signup.password?.type === "required" && "*"}
             </span>
             <div className="w-6 h-6 ml-[3px]">
               {!loginState.showPassword ? (
@@ -301,43 +358,87 @@ const LoginForm = () => {
               )}
             </div>
           </div>
+          {error_signup.password?.type === "pattern" && (
+            <div className="text-red text-[10px]">
+              "Ít nhất 8 ký tự, một chữ hoa, một chữ thường, một chữ số, một ký
+              tự đặc biệt"
+            </div>
+          )}
+          {/* password strength */}
+          {loginState.inputPassword ? (
+            <div className="w-full h-5 flex items-center justify-between">
+              <svg
+                width="96"
+                height="4"
+                viewBox="0 0 96 4"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="95.7798" height="4" fill="#FDB92C" />
+              </svg>
+              <svg
+                width="96"
+                height="4"
+                viewBox="0 0 96 4"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="95.7798" height="4" fill="#FDB92C" />
+              </svg>
+              <svg
+                width="97"
+                height="4"
+                viewBox="0 0 97 4"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.981628" width="95.7798" height="4" fill="#ECEFF4" />
+              </svg>
+              <svg
+                width="97"
+                height="4"
+                viewBox="0 0 97 4"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.981628" width="95.7798" height="4" fill="#ECEFF4" />
+              </svg>
+
+              <div>Standard</div>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         {/*  */}
-        <div className="w-full h-6 flex items-center justify-between">
-          <div className="flex items-center">
-            <input type="checkbox" className="w-5 h-5 cursor-pointer " />
-            <div className="w-[141px] h-[22px] ml-[12px] font-['Inter'] font-medium text-[16px] leading-[22.4px] tracking-[0.3px] text-gray-500">
-              Remember Me
-            </div>
-          </div>
-          <div
-            className="cursor-pointer w-[144px] h-[22px] ml-[] font-['Inter'] font-bold leading-6 text-center text-[16px] text-primary-500"
-            onClick={() => {
-              navigate(`/auth/forgot-password/${id}`);
-            }}
-          >
-            Forgot Password?
+        <div className="w-[339px] h-5 flex gap-3 items-center">
+          <input
+            type="checkbox"
+            className="w-5 h-5 cursor-pointer border-[1px] rounded-[4px] border-gray-50"
+          />
+          <div className="w-[307px] h-5 font-['Inter'] font-medium text-[16px] leading-[22.4px] tracking-[0.3px] text-gray-500">
+            I agree to the Terms & Conditions
           </div>
         </div>
-        {/* button */}
+        {/* buttn */}
         <button
           type="submit"
           className="cursor-pointer sm:w-[540px] w-[480px] h-[58px] rounded-[12px] bg-primary-500 flex items-center justify-center"
         >
           <div className="w-[62px] h-[22px] font-['Inter'] font-medium leading-[22.4px] tracking-[0.3px] text-white">
-            Log In
+            Sign Up
           </div>
         </button>
         {/* or */}
         <div className="w-[538px] h-5 flex justify-evenly items-center">
           <hr className="w-[203px] border-[1px] border-gray-50"></hr>
           <div className="w-[102px] h-5 font-['Inter'] font-medium text-[14px] text-gray-500">
-            Or log in with
+            Or sign up with
           </div>
           <hr className="w-[203px] border-[1px] border-gray-50"></hr>
         </div>
         {/*  */}
-        <div className="sm:w-[540px] w-[480px] h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center justify-center">
+        <div className="cursor-pointer sm:w-[540px] w-[480px] h-[58px] border-[1px] rounded-[12px] border-gray-100 flex items-center justify-center">
           <div className="w-[197px] h-6 flex items-center">
             <div className="w-6 h-6">
               <svg
@@ -365,15 +466,15 @@ const LoginForm = () => {
                 />
               </svg>
             </div>
-            <div className="cursor-pointer w-[161px] h-[22px] ml-3 font-['Inter'] font-medium text-[16px] leading-[22.4px] tracking-[0.3px] text-gray-900">
-              Log In with Google
+            <div className="w-[161px] h-[22px] ml-3 font-['Inter'] font-medium text-[16px] leading-[22.4px] tracking-[0.3px] text-gray-900">
+              Sign Up with Google
             </div>
           </div>
         </div>
       </form>
       <div className="w-[255px] h-6 mt-[133px] ml-[307px] font-['Inter'] font-medium text-[16px] leading-[22.4px] tracking-[0.3px]">
         <span className="font-['Inter'] font-medium text-[16px] leading-6 text-center text-gray-500">
-          Don’t have an account?
+          Already have an account?
         </span>
         <span className="font-['Inter'] font-medium text-[14px] leading-5 text-center">
           {" "}
@@ -381,14 +482,14 @@ const LoginForm = () => {
         <span
           className="cursor-pointer font-['Inter'] font-bold text-[16px] leading-6 text-center text-primary-500"
           onClick={() => {
-            navigate(`/auth/signup/${id}`);
+            navigate(`/auth/login/${id}`);
           }}
         >
-          Sign Up
+          Log In
         </span>
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default SignUpForm;

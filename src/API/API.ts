@@ -1,40 +1,49 @@
 import { Token } from "../types/types";
 
+export const fetchLogout = async (
+  access_token: string,
+  url: string,
+  method: string
+) => {
+  try {
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log("Đăng xuất xảy ra lỗi!");
+  }
+};
+export const fetchUserData = async (token: string, url: string) => {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response;
+};
+export const fetchForgotPwd = async (email: string, url: string) => {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
+    return response;
+  } catch {}
+};
+
 //Loi's API
-export const fetchUserDataLoi = async (token: string) => {
-  try {
-    const response = await fetch(
-      `https://back-end-zens-training.vercel.app/api/profile`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    console.log("Đăng xuất xảy ra lỗi!");
-  }
-};
-export const fetchLogoutLoi = async (access_token: string) => {
-  try {
-    const response = await fetch(
-      `https://back-end-zens-training.vercel.app/api/logout`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    console.log("Đăng xuất xảy ra lỗi!");
-  }
-};
 export const refresh_token_Loi = async (refresh_token: string) => {
   try {
     const response = await fetch(
@@ -50,24 +59,23 @@ export const refresh_token_Loi = async (refresh_token: string) => {
     return response;
   } catch {}
 };
-
-//Bach's API
-export const fetchUserDataBach = async (token: string, id: string) => {
+export const fetchChangePwd_Loi = async (body: {}) => {
+  console.log("fetch");
   try {
     const response = await fetch(
-      `https://zens-restaurant.azurewebsites.net/api/v1/user/profile/${id}`,
+      `https://back-end-zens-training.vercel.app/api/change-password`,
       {
-        method: "GET",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(body),
       }
     );
-    const data = await response.json();
-    return data;
+    return response;
   } catch {}
 };
+//Bach's API
 export const refresh_token_Bach = async (token: Token) => {
   try {
     const response = await fetch(
@@ -87,15 +95,35 @@ export const refresh_token_Bach = async (token: Token) => {
     return response;
   } catch {}
 };
-
+export const fetchChangePwd_Bach = async (token: string, body: {}) => {
+  try {
+    const response = await fetch(
+      `https://zens-restaurant.azurewebsites.net/api/v1/auth/change-password`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    return response;
+  } catch {}
+};
 //Ha's API
-export const fetchUserDataHa = async (token: string) => {
-  const response = await fetch("https://ha-food-api.zenslab.com/api/profile", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response;
+export const fetchChangePwd_Ha = async (token: string, body: {}) => {
+  try {
+    const response = await fetch(
+      `https://ha-food-api.zenslab.com/api/reset-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    return response;
+  } catch {}
 };

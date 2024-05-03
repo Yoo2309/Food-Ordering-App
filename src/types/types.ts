@@ -27,11 +27,17 @@ export type SignUpInfo = {
   email: string;
   password: string;
 };
-
+export type ChangePwdInfoBach = {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;  
+};
 export enum APIName {
   Loi = "Loi",
   Bach = "Bach",
   Ha = "Ha",
+  NhuY = "NhuY",
 }
 
 //Loi's API
@@ -82,7 +88,8 @@ export type LoginResponseHa = {
   refresh_token: string;
   expires_in: number;
 };
-export type ProfileResponseHa = {
+
+export type ProfileResponseHaNhuY = {
   id: number;
   fullname: string;
   username: string;
@@ -91,8 +98,16 @@ export type ProfileResponseHa = {
   gender: string;
   DOB: string;
   role: string;
-  email_verified_at: string;
-  deleted_at: string;
-  created_at: string;
-  updated_at: string;
+  email_verified_at?: string;
+  deleted_at?: string;
+  created_at?: string;
+  updated_at?: string;
+};
+//NhuY's API
+export type LoginResponseNhuY = {
+  status: boolean;
+  message: string;
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
 };
