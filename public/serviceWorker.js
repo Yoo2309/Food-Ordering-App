@@ -1,6 +1,12 @@
 //STORAGE OF BROWSER
 const CACHE_NAME = "version-1";
-const urlsToCache = ["/", "index.html", "offline.html", "/manifest", "/icon192.png"];
+const urlsToCache = [
+  "/",
+  "index.html",
+  "offline.html",
+  "/manifest",
+  "/icon192.png",
+];
 const self = this;
 
 //installation
@@ -24,15 +30,17 @@ self.addEventListener("fetch", (event) => {
 
 // actitivate the service worker
 self.addEventListener("activate", (event) => {
-    const cacheWhitelist = [];
-    cacheWhitelist.push(CACHE_NAME);
-    event.waitUntil(
-        caches.keys().then((cacheNames) => Promise.all(
-            cacheNames.map((cacheName) => {
-                if(!cacheWhitelist.includes(cacheName)){
-                    return caches.delete(cacheName);
-                }
-            })
-        ))
+  const cacheWhitelist = [];
+  cacheWhitelist.push(CACHE_NAME);
+  event.waitUntil(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames.map((cacheName) => {
+          if (!cacheWhitelist.includes(cacheName)) {
+            return caches.delete(cacheName);
+          }
+        })
+      )
     )
+  );
 });
