@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CurrentUser,
   TokenDecodeBach,
@@ -11,9 +11,6 @@ import { initialUser } from "./authSliceLoi";
 
 //helper func
 const decode_token_Bach = (state: CurrentUser, token: Token) => {
-  localStorage.setItem("Bach_accessToken", JSON.stringify(token.accessToken));
-  localStorage.setItem("Bach_refreshToken", JSON.stringify(token.refreshToken));
-
   const decode_token: TokenDecodeBach = jwtDecode(token.accessToken);
   return {
     ...state,

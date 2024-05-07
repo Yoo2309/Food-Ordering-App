@@ -1,16 +1,13 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CurrentUser,
   LoginResponseNhuY,
   ProfileResponseHaNhuY,
-  Token,
 } from "../../types/types";
 import { initialUser } from "./authSliceLoi";
 
 //helper func
 const decode_token_NhuY = (state: CurrentUser, access_token: string) => {
-  localStorage.setItem("NhuY_accessToken", JSON.stringify(access_token));
-
   return {
     ...state,
     token: {
@@ -27,20 +24,10 @@ const authSliceNhuY = createSlice({
     handle_login_NhuY: (state, action: PayloadAction<LoginResponseNhuY>) => {
       return decode_token_NhuY(state, action.payload.access_token);
     },
-    refresh_login_NhuY: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        token: {
-          ...state.token,
-          accessToken: action.payload,
-        },
-      };
-    },
     fetch_UserData_NhuY: (
       state,
       action: PayloadAction<ProfileResponseHaNhuY>
     ) => {
-      console.log(action.payload);
       return {
         ...state,
         userInfo: {
@@ -62,10 +49,6 @@ const authSliceNhuY = createSlice({
   },
   extraReducers(builder) {},
 });
-export const {
-  handle_login_NhuY,
-  refresh_login_NhuY,
-  fetch_UserData_NhuY,
-  logout_NhuY,
-} = authSliceNhuY.actions;
+export const { handle_login_NhuY, fetch_UserData_NhuY, logout_NhuY } =
+  authSliceNhuY.actions;
 export default authSliceNhuY.reducer;

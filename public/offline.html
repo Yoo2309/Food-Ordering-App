@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ⚡ lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1" />
     <title>Food Ordering Application</title>
-  </head>
-  <body>
-    <div
-      style="
+    <style amp-custom>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
         width: 197px;
         height: 40px;
         margin-left: 7rem;
@@ -16,68 +17,63 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-      "
-    >
-      <div style="display: flex; height: 40px; align-items: center">
-        <div style="width: 14px; height: 40px; background-color: #2563eb"></div>
-        <div
-          style="
-            overflow: hidden;
-            border-top-left-radius: 9999px;
-            border-bottom-left-radius: 9999px;
-            height: 2.5rem;
-            width: 20.73px;
-            background-color: #2563eb;
-          "
-        ></div>
-      </div>
-      <div
-        style="
-          width: 145px;
-          height: 24px;
-          margin-left: 4px;
-          font-family: 'Inter';
-          font-weight: bold;
-          font-size: 28px;
-          line-height: 24px;
-          color: #4b5563;
-        "
-      >
-        Insight CO
-      </div>
-    </div>
-    <div
-      style="
+      }
+      .logo-text {
+        width: 145px;
+        height: 24px;
+        margin-left: 4px;
+        font-family: "Inter";
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 24px;
+        color: #4b5563;
+      }
+      .offline-container {
         margin-top: 2rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-      "
-    >
-      <div>
-        <svg
-          width="192"
-          height="237"
-          viewBox="0 0 192 237"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect width="77" height="237" fill="#347AE2" />
-          <path
-            d="M78.2674 118.5C78.2674 53.0543 129.187 0 192 0V237C129.187 237 78.2674 183.946 78.2674 118.5Z"
-            fill="#347AE2"
-          />
-        </svg>
-      </div>
-      <div
-        style="
-          color: #4b5563;
-          font-size: xx-large;
-          font-weight: 700;
-          padding: 40px 40px;
-        "
+      }
+      .offline-icon {
+        width: 192px;
+        height: 237px;
+      }
+      .offline-text {
+        color: #4b5563;
+        font-size: xx-large;
+        font-weight: 700;
+        padding: 40px 40px;
+      }
+    </style>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <svg
+        width="33"
+        height="40"
+        viewBox="0 0 33 40"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
+        <rect width="12.9958" height="40" fill="#347AE2" />
+        <path
+          d="M13 20C13 8.9543 21.5941 0 32.1954 0V40C21.5941 40 13 31.0457 13 20Z"
+          fill="#347AE2"
+        />
+      </svg>
+      <div class="logo-text">Insight CO</div>
+    </div>
+    <div class="offline-container">
+      <amp-img
+        class="offline-icon"
+        src="data:image/svg+xml,%3Csvg width='192' height='237' viewBox='0 0 192 237' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='77' height='237' fill='%23347AE2' /%3E%3Cpath d='M78.2674 118.5C78.2674 53.0543 129.187 0 192 0V237C129.187 237 78.2674 183.946 78.2674 118.5Z' fill='%23347AE2' /%3E%3C/svg%3E"
+        layout="responsive"
+        width="192"
+        height="237"
+      ></amp-img>
+      <div class="offline-text">
         <p>You are offline please connect to internet.</p>
       </div>
     </div>
