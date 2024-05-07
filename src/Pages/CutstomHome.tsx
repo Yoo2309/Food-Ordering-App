@@ -1,41 +1,38 @@
-import Dribbble from "../Component/SVG/Dribbble";
-import Twitter from "../Component/SVG/Twitter";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import Dribbble from "../Component/SVG/Dribbble";
+import Twitter from "../Component/SVG/Twitter";
 import {
-  refresh_login_Loi,
   fetch_UserData_Loi,
   initialUser,
   handle_login_Loi,
   logout_Loi,
 } from "../redux/slices/authSliceLoi";
 import {
-  refresh_login_Bach,
   fetch_UserData_Bach,
   logout_Bach,
   handle_login_Bach,
+  refresh_login_Bach,
 } from "../redux/slices/authSliceBach";
-import { useNavigate, useParams } from "react-router-dom";
 import { APIName, CurrentUser, Token } from "../types/types";
-import { toast } from "react-toastify";
 import {
   fetch_UserData_Ha,
   logout_Ha,
-  refresh_login_Ha,
   refresh_token_Ha,
 } from "../redux/slices/authSliceHa";
+import {
+  fetch_UserData_NhuY,
+  logout_NhuY,
+} from "../redux/slices/authSliceNhuY";
 import {
   fetchLogout,
   fetchUserData,
   refresh_token_Bach,
   refresh_token_Loi,
 } from "../API/API";
-import {
-  fetch_UserData_NhuY,
-  logout_NhuY,
-  refresh_login_NhuY,
-} from "../redux/slices/authSliceNhuY";
 import ChangePassword from "../Component/ChangePassword";
 
 const CutstomHome = () => {
@@ -58,8 +55,6 @@ const CutstomHome = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const HandleLogout = async () => {
-    localStorage.removeItem(`${id}_accessToken`);
-    localStorage.removeItem(`${id}_refreshToken`);
     switch (id) {
       case APIName.Loi:
         dispatch(logout_Loi());
@@ -84,7 +79,7 @@ const CutstomHome = () => {
       `https://back-end-zens-training.vercel.app/api/logout`,
       "GET"
     );
-    if (response?.ok) {
+    if (response?.ok || response?.status === 401) {
       HandleLogout();
     } else {
       toast.error("Đăng xuất thất bại");
@@ -107,6 +102,9 @@ const CutstomHome = () => {
           if (resp.status === 200) {
             const data = await resp.json();
             dispatch(handle_login_Loi(data));
+          } else if (resp.status === 401) {
+            toast.info("Phiên đăng nhập hết hạn");
+            HandleLogout();
           }
         }
       }
@@ -181,53 +179,9 @@ const CutstomHome = () => {
 
   useEffect(() => {
     if (!user.token.accessToken) {
-      let access_token_stored = localStorage.getItem(`${id}_accessToken`);
-      let refresh_token_stored = localStorage.getItem(`${id}_refreshToken`);
-      switch (id) {
-        case APIName.Loi:
-          if (refresh_token_stored && access_token_stored) {
-            dispatch(
-              refresh_login_Loi({
-                accessToken: access_token_stored.replace(/"/g, ""),
-                refreshToken: refresh_token_stored.replace(/"/g, ""),
-              })
-            );
-          } else {
-            navigate(`/auth/login/${id}`);
-          }
-          break;
-        case APIName.Bach:
-          if (access_token_stored && refresh_token_stored) {
-            dispatch(
-              refresh_login_Bach({
-                accessToken: access_token_stored,
-                refreshToken: refresh_token_stored,
-              })
-            );
-          } else {
-            navigate(`/auth/login/${id}`);
-          }
-          break;
-        case APIName.Ha:
-          if (access_token_stored && refresh_token_stored) {
-            dispatch(
-              refresh_login_Ha({
-                accessToken: access_token_stored,
-                refreshToken: refresh_token_stored,
-              })
-            );
-          } else {
-            navigate(`/auth/login/${id}`);
-          }
-          break;
-        case APIName.NhuY:
-          if (access_token_stored) {
-            dispatch(refresh_login_NhuY(access_token_stored));
-          } else {
-            navigate(`/auth/login/${id}`);
-          }
-          break;
-      }
+      navigate(`/auth/login/${id}`);
+    } else if (id === APIName.Bach) {
+      dispatch(refresh_login_Bach(user.token));
     }
   }, []);
 
@@ -273,69 +227,69 @@ const CutstomHome = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_14_4413)">
+              <g clipPath="url(#clip0_14_4413)">
                 <path
                   d="M10.0007 14.1663C12.3018 14.1663 14.1673 12.3009 14.1673 9.99967C14.1673 7.69849 12.3018 5.83301 10.0007 5.83301C7.69946 5.83301 5.83398 7.69849 5.83398 9.99967C5.83398 12.3009 7.69946 14.1663 10.0007 14.1663Z"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M10 0.833008V2.49967"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M10 17.5V19.1667"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M3.51758 3.5166L4.70091 4.69993"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M15.3008 15.2998L16.4841 16.4831"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M0.833984 10H2.50065"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M17.5 10H19.1667"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M3.51758 16.4831L4.70091 15.2998"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M15.3008 4.69993L16.4841 3.5166"
                   stroke="#347AE2"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </g>
               <defs>
@@ -356,9 +310,9 @@ const CutstomHome = () => {
               <path
                 d="M17.4994 10.6583C17.3683 12.0768 16.836 13.4287 15.9646 14.5557C15.0933 15.6826 13.919 16.5382 12.5792 17.0221C11.2394 17.5061 9.78942 17.5984 8.39901 17.2884C7.00861 16.9784 5.73526 16.2788 4.72795 15.2715C3.72064 14.2642 3.02105 12.9908 2.71102 11.6004C2.40099 10.21 2.49336 8.76007 2.97731 7.42025C3.46127 6.08042 4.31679 4.90614 5.44377 4.03479C6.57076 3.16345 7.92259 2.63109 9.3411 2.5C8.51061 3.62356 8.11097 5.00787 8.21487 6.40118C8.31878 7.79448 8.91931 9.10422 9.90726 10.0922C10.8952 11.0801 12.2049 11.6807 13.5983 11.7846C14.9916 11.8885 16.3759 11.4888 17.4994 10.6583V10.6583Z"
                 stroke="#96A0B5"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>
@@ -440,21 +394,21 @@ const CutstomHome = () => {
                 cy="20"
                 r="19.5"
                 stroke="#E0E5ED"
-                stroke-dasharray="4 4"
+                strokeDasharray="4 4"
               />
               <path
                 d="M20 13V27"
                 stroke="#347AE2"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M13 20H27"
                 stroke="#347AE2"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>
@@ -516,27 +470,27 @@ const CutstomHome = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <g clip-path="url(#clip0_14_3847)">
+                  <g clipPath="url(#clip0_14_3847)">
                     <path
                       d="M11.0007 20.1663C16.0633 20.1663 20.1673 16.0623 20.1673 10.9997C20.1673 5.93706 16.0633 1.83301 11.0007 1.83301C5.93804 1.83301 1.83398 5.93706 1.83398 10.9997C1.83398 16.0623 5.93804 20.1663 11.0007 20.1663Z"
                       stroke="#96A0B5"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M1.83398 11H20.1673"
                       stroke="#96A0B5"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M11.0007 1.83301C13.2935 4.34316 14.5965 7.60071 14.6673 10.9997C14.5965 14.3986 13.2935 17.6562 11.0007 20.1663C8.70781 17.6562 7.40479 14.3986 7.33398 10.9997C7.40479 7.60071 8.70781 4.34316 11.0007 1.83301V1.83301Z"
                       stroke="#96A0B5"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </g>
                   <defs>
@@ -561,9 +515,9 @@ const CutstomHome = () => {
                 <path
                   d="M5.5 8.25L11 13.75L16.5 8.25"
                   stroke="#292C38"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -580,16 +534,16 @@ const CutstomHome = () => {
                 <path
                   d="M20.1673 11H14.6673L12.834 13.75H9.16732L7.33398 11H1.83398"
                   stroke="#96A0B5"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M4.99648 4.68449L1.83398 11.0003V16.5003C1.83398 16.9866 2.02714 17.4529 2.37096 17.7967C2.71477 18.1405 3.18109 18.3337 3.66732 18.3337H18.334C18.8202 18.3337 19.2865 18.1405 19.6303 17.7967C19.9742 17.4529 20.1673 16.9866 20.1673 16.5003V11.0003L17.0048 4.68449C16.853 4.37905 16.6191 4.122 16.3292 3.94225C16.0393 3.7625 15.7051 3.66717 15.364 3.66699H6.63732C6.29624 3.66717 5.96198 3.7625 5.67211 3.94225C5.38224 4.122 5.14826 4.37905 4.99648 4.68449V4.68449Z"
                   stroke="#96A0B5"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -609,30 +563,30 @@ const CutstomHome = () => {
                 <path
                   d="M17.4167 3.66699H4.58333C3.57081 3.66699 2.75 4.4878 2.75 5.50033V18.3337C2.75 19.3462 3.57081 20.167 4.58333 20.167H17.4167C18.4292 20.167 19.25 19.3462 19.25 18.3337V5.50033C19.25 4.4878 18.4292 3.66699 17.4167 3.66699Z"
                   stroke="#96A0B5"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M14.666 1.83301V5.49967"
                   stroke="#96A0B5"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M7.33398 1.83301V5.49967"
                   stroke="#96A0B5"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M2.75 9.16699H19.25"
                   stroke="#96A0B5"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -650,20 +604,20 @@ const CutstomHome = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <g clip-path="url(#clip0_14_3870)">
+                  <g clipPath="url(#clip0_14_3870)">
                     <path
                       d="M11 13.75C12.5188 13.75 13.75 12.5188 13.75 11C13.75 9.48122 12.5188 8.25 11 8.25C9.48122 8.25 8.25 9.48122 8.25 11C8.25 12.5188 9.48122 13.75 11 13.75Z"
                       stroke="#347AE2"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M17.7827 13.7503C17.6607 14.0268 17.6243 14.3335 17.6782 14.6309C17.7321 14.9282 17.8739 15.2026 18.0852 15.4187L18.1402 15.4737C18.3106 15.6439 18.4459 15.8461 18.5381 16.0687C18.6304 16.2912 18.6779 16.5298 18.6779 16.7707C18.6779 17.0117 18.6304 17.2502 18.5381 17.4728C18.4459 17.6954 18.3106 17.8976 18.1402 18.0678C17.9699 18.2383 17.7677 18.3735 17.5452 18.4658C17.3226 18.558 17.084 18.6055 16.8431 18.6055C16.6022 18.6055 16.3636 18.558 16.141 18.4658C15.9185 18.3735 15.7163 18.2383 15.546 18.0678L15.491 18.0128C15.275 17.8015 15.0006 17.6597 14.7032 17.6058C14.4059 17.5519 14.0992 17.5883 13.8227 17.7103C13.5516 17.8265 13.3203 18.0195 13.1575 18.2654C12.9946 18.5113 12.9072 18.7995 12.906 19.0945V19.2503C12.906 19.7366 12.7129 20.2029 12.369 20.5467C12.0252 20.8905 11.5589 21.0837 11.0727 21.0837C10.5865 21.0837 10.1201 20.8905 9.77632 20.5467C9.4325 20.2029 9.23935 19.7366 9.23935 19.2503V19.1678C9.23225 18.8644 9.13404 18.5702 8.95748 18.3233C8.78093 18.0764 8.53419 17.8884 8.24935 17.7837C7.97287 17.6616 7.66617 17.6252 7.36881 17.6792C7.07145 17.7331 6.79705 17.8748 6.58102 18.0862L6.52602 18.1412C6.35575 18.3116 6.15355 18.4468 5.93099 18.5391C5.70843 18.6314 5.46986 18.6789 5.22893 18.6789C4.988 18.6789 4.74944 18.6314 4.52687 18.5391C4.30431 18.4468 4.10212 18.3116 3.93185 18.1412C3.76139 17.9709 3.62617 17.7687 3.53391 17.5461C3.44164 17.3236 3.39416 17.085 3.39416 16.8441C3.39416 16.6031 3.44164 16.3646 3.53391 16.142C3.62617 15.9195 3.76139 15.7173 3.93185 15.547L3.98685 15.492C4.19817 15.276 4.33994 15.0016 4.39385 14.7042C4.44777 14.4068 4.41137 14.1001 4.28935 13.8237C4.17315 13.5525 3.98021 13.3213 3.73428 13.1584C3.48834 12.9956 3.20015 12.9082 2.90518 12.907H2.74935C2.26312 12.907 1.7968 12.7138 1.45299 12.37C1.10917 12.0262 0.916016 11.5599 0.916016 11.0737C0.916016 10.5874 1.10917 10.1211 1.45299 9.7773C1.7968 9.43348 2.26312 9.24033 2.74935 9.24033H2.83185C3.13526 9.23323 3.42952 9.13502 3.67637 8.95846C3.92323 8.7819 4.11125 8.53517 4.21602 8.25033C4.33804 7.97384 4.37444 7.66715 4.32052 7.36979C4.2666 7.07242 4.12484 6.79803 3.91352 6.58199L3.85852 6.52699C3.68806 6.35672 3.55283 6.15453 3.46057 5.93197C3.36831 5.7094 3.32082 5.47084 3.32082 5.22991C3.32082 4.98898 3.36831 4.75041 3.46057 4.52785C3.55283 4.30529 3.68806 4.10309 3.85852 3.93283C4.02878 3.76237 4.23098 3.62714 4.45354 3.53488C4.6761 3.44262 4.91467 3.39513 5.1556 3.39513C5.39653 3.39513 5.63509 3.44262 5.85766 3.53488C6.08022 3.62714 6.28241 3.76237 6.45268 3.93283L6.50768 3.98783C6.72372 4.19915 6.99811 4.34091 7.29548 4.39483C7.59284 4.44875 7.89953 4.41235 8.17602 4.29033H8.24935C8.52047 4.17413 8.7517 3.98118 8.91457 3.73525C9.07744 3.48932 9.16484 3.20113 9.16602 2.90616V2.75033C9.16602 2.2641 9.35917 1.79778 9.70299 1.45396C10.0468 1.11015 10.5131 0.916992 10.9993 0.916992C11.4856 0.916992 11.9519 1.11015 12.2957 1.45396C12.6395 1.79778 12.8327 2.2641 12.8327 2.75033V2.83283C12.8339 3.1278 12.9213 3.41599 13.0841 3.66192C13.247 3.90785 13.4782 4.10079 13.7493 4.21699C14.0258 4.33901 14.3325 4.37541 14.6299 4.3215C14.9273 4.26758 15.2016 4.12582 15.4177 3.91449L15.4727 3.85949C15.6429 3.68904 15.8451 3.55381 16.0677 3.46155C16.2903 3.36929 16.5288 3.3218 16.7698 3.3218C17.0107 3.3218 17.2493 3.36929 17.4718 3.46155C17.6944 3.55381 17.8966 3.68904 18.0668 3.85949C18.2373 4.02976 18.3725 4.23196 18.4648 4.45452C18.5571 4.67708 18.6045 4.91565 18.6045 5.15658C18.6045 5.3975 18.5571 5.63607 18.4648 5.85863C18.3725 6.0812 18.2373 6.28339 18.0668 6.45366L18.0118 6.50866C17.8005 6.7247 17.6588 6.99909 17.6048 7.29645C17.5509 7.59381 17.5873 7.90051 17.7093 8.17699V8.25033C17.8255 8.52145 18.0185 8.75267 18.2644 8.91554C18.5104 9.07841 18.7985 9.16582 19.0935 9.16699H19.2493C19.7356 9.16699 20.2019 9.36015 20.5457 9.70396C20.8895 10.0478 21.0827 10.5141 21.0827 11.0003C21.0827 11.4866 20.8895 11.9529 20.5457 12.2967C20.2019 12.6405 19.7356 12.8337 19.2493 12.8337H19.1668C18.8719 12.8348 18.5837 12.9222 18.3378 13.0851C18.0918 13.248 17.8989 13.4792 17.7827 13.7503V13.7503Z"
                       stroke="#347AE2"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </g>
                   <defs>
@@ -688,9 +642,9 @@ const CutstomHome = () => {
                 <path
                   d="M5.5 8.25L11 13.75L16.5 8.25"
                   stroke="#292C38"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -726,23 +680,23 @@ const CutstomHome = () => {
               <path
                 d="M8.25 19.25H4.58333C4.0971 19.25 3.63079 19.0568 3.28697 18.713C2.94315 18.3692 2.75 17.9029 2.75 17.4167V4.58333C2.75 4.0971 2.94315 3.63079 3.28697 3.28697C3.63079 2.94315 4.0971 2.75 4.58333 2.75H8.25"
                 stroke="#96A0B5"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M14.666 15.5837L19.2493 11.0003L14.666 6.41699"
                 stroke="#96A0B5"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M19.25 11H8.25"
                 stroke="#96A0B5"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>
@@ -764,7 +718,7 @@ const CutstomHome = () => {
             include at least one upper case letter, one lower case letter, one
             number and one special character.
           </div>
-          <ChangePassword user={user} handllogout={HandleLogout}/>
+          <ChangePassword user={user} handllogout={HandleLogout} />
 
           <div className="w-20 h-20 left-[56px] top-[56px] absolute bg-gray-50 rounded-full" />
           <div className="w-8 h-8 left-[80px] top-[80px] absolute">
@@ -778,16 +732,16 @@ const CutstomHome = () => {
               <path
                 d="M25.3333 14.667H6.66667C5.19391 14.667 4 15.8609 4 17.3337V26.667C4 28.1398 5.19391 29.3337 6.66667 29.3337H25.3333C26.8061 29.3337 28 28.1398 28 26.667V17.3337C28 15.8609 26.8061 14.667 25.3333 14.667Z"
                 stroke="#347AE2"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M9.33398 14.667V9.33366C9.33398 7.56555 10.0364 5.86986 11.2866 4.61961C12.5368 3.36937 14.2325 2.66699 16.0007 2.66699C17.7688 2.66699 19.4645 3.36937 20.7147 4.61961C21.9649 5.86986 22.6673 7.56555 22.6673 9.33366V14.667"
                 stroke="#347AE2"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>
@@ -805,16 +759,16 @@ const CutstomHome = () => {
               <path
                 d="M25.3333 14.667H6.66667C5.19391 14.667 4 15.8609 4 17.3337V26.667C4 28.1398 5.19391 29.3337 6.66667 29.3337H25.3333C26.8061 29.3337 28 28.1398 28 26.667V17.3337C28 15.8609 26.8061 14.667 25.3333 14.667Z"
                 stroke="#347AE2"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M9.33398 14.667V9.33366C9.33398 7.56555 10.0364 5.86986 11.2866 4.61961C12.5368 3.36937 14.2325 2.66699 16.0007 2.66699C17.7688 2.66699 19.4645 3.36937 20.7147 4.61961C21.9649 5.86986 22.6673 7.56555 22.6673 9.33366V14.667"
                 stroke="#347AE2"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CurrentUser,
   LoginTokenLoi,
@@ -28,9 +28,6 @@ export const initialUser: CurrentUser = {
 //helper func
 const decode_token_Loi = (state: CurrentUser, token: Token) => {
   const decode_token: LoginTokenLoi = jwtDecode(token.accessToken);
-
-  localStorage.setItem("Loi_accessToken", JSON.stringify(token.accessToken));
-  localStorage.setItem("Loi_refreshToken", JSON.stringify(token.refreshToken));
   return {
     ...state,
     token: {
@@ -62,29 +59,17 @@ const authSliceLoi = createSlice({
         },
       };
     },
-    refresh_login_Loi: (state, action: PayloadAction<Token>) => {
-      const decode_token: LoginTokenLoi = jwtDecode(action.payload.accessToken);
-      return {
-        ...state,
-        token: {
-          accessToken: action.payload.accessToken,
-          refreshToken: action.payload.refreshToken,
-        },
-        userInfo: {
-          ...state.userInfo,
-          id: decode_token.sub,
-          username: decode_token.username,
-        },
-      };
-    },
     fetch_UserData_Loi: (state, action: PayloadAction<ProfileResponseLoi>) => {
       if (action.payload) {
+        console.log("set user");
         return {
           ...state,
           userInfo: {
             ...state.userInfo,
             email: action.payload.email,
             role: action.payload.role,
+            id: action.payload.id,
+            username: action.payload.username,
           },
         };
       }
@@ -92,8 +77,11 @@ const authSliceLoi = createSlice({
     logout_Loi: () => {
       return initialUser;
     },
-  }
+  },
 });
-export const { handle_login_Loi, refresh_login_Loi, fetch_UserData_Loi, logout_Loi } =
-  authSliceLoi.actions;
+export const {
+  handle_login_Loi,
+  fetch_UserData_Loi,
+  logout_Loi,
+} = authSliceLoi.actions;
 export default authSliceLoi.reducer;
